@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- See https://github.com/StuffJackMakes/Grid-Tunes for implementation details -->
+
+
+<!--
+INSPIRATION
+https://github.com/irshadshalu/music-grid
+https://music-grid.surge.sh
+https://www.tones.fm/tones/calm
+
+
+
+
+NOTES
+wwwwewwww 13 hours ago [–]
+Can someone with knowledge of music theory explain how it works?
+Meaning, how come if I close my eyes and place some random tiles, it still come out sounding OK. But not so if I bang random keys on a piano.
+reply
+￼
+
+palimpsests 12 hours ago [–]
+The notes that this app is playing, from lowest to highest, are:
+B3 C#4 F#4 G#4 C#5 D#5 E5 G#6 B6 C#7 F#8 G#8
+These notes are all diatonic, e.g. from the same key (unlike all the keys on a piano). That key is C# relative minor (or E major). In modal language, this is the C# Aeolian (or, when played from E to E, Ionian mode):
+C# D# E F# G# A B C#
+If you play notes restricted to a single key, it will come out sounding OK.
+reply
+￼
+
+yesenadam 1 hour ago [–]
+> this is the C# Aeolian
+Or it could equally well be
+G# A# B C# D# E F# G#
+(I hear it much more like that too.)
+reply
+￼
+
+flak48 3 hours ago [–]
+Same as playing only the white keys right? (C major/ A minor)
+reply
+￼
+
+yesenadam 1 hour ago [–]
+Yeah, except with no F.
+reply
+
+ -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Create complex music loops">
+    <meta name="keywords" content="grid, tunes, music, sound, looping">
+    <meta name=author content="Jack Sivak">
+    <meta name=viewport content="width=device-width">
+    <title>Grid Tunes</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <style>
+        html {
+            background-color: #000;
+            color: #fff;
+            line-height: 1.4;
+            font-family: sans-serif;
+        }
+
+        body {
+            margin: 0;
+            text-align: center;
+        }
+
+        img {
+            max-height: 128px;
+        }
+
+        setting {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px
+        }
+
+        input {
+            margin: 0px 10px;
+        }
+
+        .fa {
+            font-size: 24px;
+            margin: 0.25em;
+            padding: 0.25em;
+            cursor: pointer;
+        }
+
+        a {
+            font-weight: bolder;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #0270c9;
+        }
+
+        footer {
+            max-width: 30em;
+            padding: 1em;
+            background-color: #000;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        option {
+            max-width: 300px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #fff;
+            outline: none;
+            max-width: 300px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 12px;
+          height: 24px;
+          background: #fff;
+          border: 2px solid #000;
+          cursor: pointer;
+          border-radius: 2px;
+        }
+
+        input[type=range]::-moz-range-thumb {
+          width: 12px;
+          height: 24px;
+          background: #fff;
+          border: 2px solid #000;
+          cursor: pointer;
+          border-radius: 2px;
+        }
+
+        label {
+            width: 60px;
+        }
+        label.left {
+            text-align: right;
+        }
+        label.right {
+            text-align: left;
+        }
+    </style>
+    <script src="js/third-party/Tone.js"></script>
+    <script src="js/gridTune.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <img src="grid_tunes_logo.svg" alt="Grid Tunes" title="Grid Tunes"/>
+    <h1 style="margin-bottom: 0px;">Grid Tunes</h1>
+    <div style="margin-bottom: 24px;"><i>Create <strong>music loops</strong> using a 2D grid</i></div>
+
+
+    <setting>
+        <label class="left">Volume</label>
+        <input id="vol1" class="slider" type="range" min="-10" max="10" value="0" step="0.5" onchange="OnVolumeSliderChange(this)">
+        <label for="vol1" class="right">0 dB</label>
+    </setting>
+    <setting>
+        <label class="left">Speed</label>
+        <input id="speed1" type="range" min="1" max="60" value="10" step="1" onchange="OnSpeedSliderChange(this)">
+        <label for="speed1" class="right">10</label>
+    </setting>
+    <setting>
+        <i class="fa fa-step-backward" onclick="SingleStepBack()"></i>
+        <i id="playPauseButton" class="fa fa-pause" onclick="PlayPause()"></i>
+        <i class="fa fa-step-forward" onclick="SingleStep()"></i>
+        <i class="fa fa-trash" onclick="ClearGrid()"></i>
+        <span style="border-right: 2px solid #ccc; height: 25px; border-radius: 2px;"></span>
+        <i class="fa fa-plus" onclick="AddGridTune()"></i>
+        <i class="fa fa-minus" onclick="RemoveGridTune()"></i>
+    </setting>
+
+    <div id="gridTuneContainer" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
+
+    <footer>
+        Made by <a href="stuffjackmakes.com">Jack Sivak</a>. Check out the project on <a href="https://github.com/StuffJackMakes/Grid-Tunes">Github</a>
+    </footer>
+</body>
+</html>
