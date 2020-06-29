@@ -42,8 +42,8 @@ class GridTune {
             // If there are no blips in the clicked cell, create one
             // Otherwise, rotate all blips in the clicked cell
             // Remove any blips that rotate past lett
-            if (this.boardState[cell.x][cell.y].length === 0) {
-                this.boardState[cell.x][cell.y].push(BLIP_STATE.UP);
+            if (this.gridState[cell.x][cell.y].length === 0) {
+                this.gridState[cell.x][cell.y].push(BLIP_STATE.UP);
             } else {
                 this.RotateBlipsInCell(cell.x, cell.y, true);
             }
@@ -153,16 +153,16 @@ class GridTune {
 
     // Clear the grid of any blips
     ClearGrid() {
-        // The main board state
-        this.boardState = [];
+        // The main grid state
+        this.gridState = [];
         for (let i = 0; i < this.gridWidth; i++) {
-            this.boardState.push(new Array(this.gridHeight));
+            this.gridState.push(new Array(this.gridHeight));
             for (let j = 0; j < this.gridHeight; j++) {
-                this.boardState[i][j] = [];
+                this.gridState[i][j] = [];
             }
         }
 
-        // Store an empty board state to swap with the main board state whenever the grid is updated
+        // Store an empty grid state to swap with the main grid state whenever the grid is updated
         this.emptyGrid = [];
         for (let i = 0; i < this.gridWidth; i++) {
             this.emptyGrid.push(new Array(this.gridHeight));
@@ -200,76 +200,76 @@ class GridTune {
     // Handles collision of blips
     UpdateGrid(reverse) {
         let notesToPlay = [];
-        let newBoardState = this.emptyGrid;
+        let newGridState = this.emptyGrid;
 
         // Step through each cell of the grid
         for (let i = 0; i < this.gridWidth; i++) {
             for (let j = 0; j < this.gridHeight; j++) {
                 // Step through each blip in a given cell
-                let blip = this.boardState[i][j].pop()
+                let blip = this.gridState[i][j].pop()
 
                 // While there is a clip to handle, do so and add it to the new grid
                 while (blip) {
                     if ((!reverse && blip === BLIP_STATE.UP) || (reverse && blip === BLIP_STATE.DOWN)) {
                         // Handle UP blips and reverse DOWN blips
                         if (reverse && j == 1) {
-                            newBoardState[i][j-1].push(this.FlipBlip(blip));
+                            newGridState[i][j-1].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[i]) === -1) notesToPlay.push(this.notes[i]);
                         } else if (j > 0) {
-                            newBoardState[i][j-1].push(blip);
+                            newGridState[i][j-1].push(blip);
                         } else {
-                            newBoardState[i][j+1].push(this.FlipBlip(blip));
+                            newGridState[i][j+1].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[i]) === -1) notesToPlay.push(this.notes[i]);
                         }
                     } else if ((!reverse && blip === BLIP_STATE.RIGHT) || (reverse && blip === BLIP_STATE.LEFT)) {
                         // Handle RIGHT blips and reverse LEFT blips
                         if (reverse && i === this.gridWidth - 2) {
-                            newBoardState[i+1][j].push(this.FlipBlip(blip));
+                            newGridState[i+1][j].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[j]) === -1) notesToPlay.push(this.notes[j]);
                         } else if (i < this.gridWidth - 1) {
-                            newBoardState[i+1][j].push(blip);
+                            newGridState[i+1][j].push(blip);
                         } else {
-                            newBoardState[i-1][j].push(this.FlipBlip(blip));
+                            newGridState[i-1][j].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[j]) === -1) notesToPlay.push(this.notes[j]);
                         }
                     } else if ((!reverse && blip === BLIP_STATE.DOWN) || (reverse && blip === BLIP_STATE.UP)) {
                         // Handle DOWN blips and reverse UP blips
                         if (reverse && j === this.gridHeight - 2) {
-                            newBoardState[i][j+1].push(this.FlipBlip(blip));
+                            newGridState[i][j+1].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[i]) === -1) notesToPlay.push(this.notes[i]);
                         } else if (j < this.gridHeight - 1) {
-                            newBoardState[i][j+1].push(blip);
+                            newGridState[i][j+1].push(blip);
                         } else {
-                            newBoardState[i][j-1].push(this.FlipBlip(blip));
+                            newGridState[i][j-1].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[i]) === -1) notesToPlay.push(this.notes[i]);
                         }
                     } else if ((!reverse && blip === BLIP_STATE.LEFT) || (reverse && blip === BLIP_STATE.RIGHT)) {
                         // Handle LEFT blips and reverse RIGHT blips
                         if (reverse && i == 1) {
-                            newBoardState[i-1][j].push(this.FlipBlip(blip));
+                            newGridState[i-1][j].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[j]) === -1) notesToPlay.push(this.notes[j]);
                         } else if (i > 0) {
-                            newBoardState[i-1][j].push(blip);
+                            newGridState[i-1][j].push(blip);
                         } else {
-                            newBoardState[i+1][j].push(this.FlipBlip(blip));
+                            newGridState[i+1][j].push(this.FlipBlip(blip));
                             if (notesToPlay.indexOf(this.notes[j]) === -1) notesToPlay.push(this.notes[j]);
                         }
                     }
 
                     // Check for the next blip in this cell
-                    blip = this.boardState[i][j].pop();
+                    blip = this.gridState[i][j].pop();
                 }
             }
         }
 
-        // The original board state is now empty, so replace it with the new board state
-        this.emptyGrid = this.boardState;
-        this.boardState = newBoardState;
+        // The original grid state is now empty, so replace it with the new grid state
+        this.emptyGrid = this.gridState;
+        this.gridState = newGridState;
 
         // If multiple blips ended up in the same cell, rotate all of them clockwise
         for (let i = 0; i < this.gridWidth; i++) {
             for (let j = 0; j < this.gridHeight; j++) {
-                if (this.boardState[i][j].length > 1) {
+                if (this.gridState[i][j].length > 1) {
                     this.RotateBlipsInCell(i, j);
                 }
             }
@@ -286,7 +286,7 @@ class GridTune {
         ctx.strokeStyle = "#000";
         for (let i = 0; i < this.gridWidth; i++) {
             for (let j = 0; j < this.gridHeight; j++) {
-                let blipCount = this.boardState[i][j].length;
+                let blipCount = this.gridState[i][j].length;
                 let xPos = i * this.cellWidth;
                 let yPos = j * this.cellHeight;
 
@@ -304,19 +304,19 @@ class GridTune {
                     if (blipCount === 1) {
                         // If there is only one blip in a cell, draw it as an arrow
                         ctx.beginPath();
-                        if (this.boardState[i][j][0] === BLIP_STATE.UP) {
+                        if (this.gridState[i][j][0] === BLIP_STATE.UP) {
                             ctx.moveTo(xPos + this.cellWidth / 4, yPos + this.cellHeight / 4);
                             ctx.lineTo(xPos - this.cellWidth / 4, yPos + this.cellHeight / 4);
                             ctx.lineTo(xPos, yPos - this.cellHeight / 4);
-                        } else if (this.boardState[i][j][0] === BLIP_STATE.RIGHT) {
+                        } else if (this.gridState[i][j][0] === BLIP_STATE.RIGHT) {
                             ctx.moveTo(xPos - this.cellWidth / 4, yPos + this.cellHeight / 4);
                             ctx.lineTo(xPos - this.cellWidth / 4, yPos - this.cellHeight / 4);
                             ctx.lineTo(xPos + this.cellWidth / 4, yPos);
-                        } else if (this.boardState[i][j][0] === BLIP_STATE.DOWN) {
+                        } else if (this.gridState[i][j][0] === BLIP_STATE.DOWN) {
                             ctx.moveTo(xPos + this.cellWidth / 4, yPos - this.cellHeight / 4);
                             ctx.lineTo(xPos - this.cellWidth / 4, yPos - this.cellHeight / 4);
                             ctx.lineTo(xPos, yPos + this.cellHeight / 4);
-                        } else if (this.boardState[i][j][0] === BLIP_STATE.LEFT) {
+                        } else if (this.gridState[i][j][0] === BLIP_STATE.LEFT) {
                             ctx.moveTo(xPos + this.cellWidth / 4, yPos - this.cellHeight / 4);
                             ctx.lineTo(xPos + this.cellWidth / 4, yPos + this.cellHeight / 4);
                             ctx.lineTo(xPos - this.cellWidth / 4, yPos);
@@ -347,15 +347,15 @@ class GridTune {
     // Rotates all blips in a cell clockwise
     // if removeLeft is true, remove left-facing blips instead of rotating them
     RotateBlipsInCell(x, y, removeLeft) {
-        for (let i = this.boardState[x][y].length - 1; i >= 0; i--) {
-            if (this.boardState[x][y][i] === BLIP_STATE.LEFT){
+        for (let i = this.gridState[x][y].length - 1; i >= 0; i--) {
+            if (this.gridState[x][y][i] === BLIP_STATE.LEFT){
                 if (removeLeft) {
-                    this.boardState[x][y].splice(i, 1);
+                    this.gridState[x][y].splice(i, 1);
                 } else {
-                    this.boardState[x][y][i] = BLIP_STATE.UP;
+                    this.gridState[x][y][i] = BLIP_STATE.UP;
                 }
             } else {
-                this.boardState[x][y][i] += 1;
+                this.gridState[x][y][i] += 1;
             }
         }
     }
@@ -367,5 +367,58 @@ class GridTune {
         if (blip === BLIP_STATE.DOWN) return BLIP_STATE.UP;
         if (blip === BLIP_STATE.LEFT) return BLIP_STATE.RIGHT;
         return blip;
+    }
+
+    // Convert a GridTune into an object
+    Serialize() {
+        // Encode each x, y, state as a 16-bit number
+        // 7 bits: x, 7 bits: y, 2 bits: state
+        // Store two states in each number within an array
+        let cellCount = 0;
+        let cellStates = [];
+        for (let i = 0; i < this.gridWidth; i++) {
+            for (let j = 0; j < this.gridHeight; j++) {
+                for (let blip of this.gridState[i][j]) {
+                    // Append a new number when needed
+                    if (cellCount % 2 === 0) { cellStates.push(0); }
+
+                    // Add the necesarry bits of information to a 16-bit number
+                    let encodedNumber = 0;
+                    encodedNumber |= i << 9;
+                    encodedNumber |= j << 2;
+                    encodedNumber |= blip - 1;
+
+                    // Add the 16-bit number to the larger number for storing
+                    cellStates[cellStates.length - 1] |= (encodedNumber << ((cellCount % 2) * 16));
+                    
+                    // Keep track of the number of stored cells
+                    cellCount++;
+                }
+            }
+        }
+
+        // Indcate how many cell's worth of data is stored  in the array
+        cellStates.unshift(cellCount);
+
+        return [
+            OSCILLATOR_TYPES.indexOf(this.oscillatorSelect.value),
+            Number(this.synth.detune.value),
+            cellStates
+        ]
+    }
+
+    // Convert an object into a GridTune
+    Deserialize(serialized) {
+        this.SetOscillatorType(OSCILLATOR_TYPES[serialized[0]]);
+        this.SetDetune(serialized[1]);
+
+        // See "Serialize()" for encoding scheme
+        for (let i = 0; i < serialized[2][0]; i++) {
+            let relevantBits = (serialized[2][1 + Math.floor(i / 2)] >> ((i % 2) * 16)) & 0xffff;
+            let x = (relevantBits >> 9) & 0b1111111;
+            let y = (relevantBits >> 2) & 0b1111111;
+            let state = 1 + (relevantBits & 0b11);
+            this.gridState[x][y].push(state);
+        }
     }
 }

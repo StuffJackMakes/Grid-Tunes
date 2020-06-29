@@ -1,50 +1,5 @@
 <!DOCTYPE html>
 <!-- See https://github.com/StuffJackMakes/Grid-Tunes for implementation details -->
-
-
-<!--
-INSPIRATION
-https://github.com/irshadshalu/music-grid
-https://music-grid.surge.sh
-https://www.tones.fm/tones/calm
-
-
-
-
-NOTES
-wwwwewwww 13 hours ago [–]
-Can someone with knowledge of music theory explain how it works?
-Meaning, how come if I close my eyes and place some random tiles, it still come out sounding OK. But not so if I bang random keys on a piano.
-reply
-￼
-
-palimpsests 12 hours ago [–]
-The notes that this app is playing, from lowest to highest, are:
-B3 C#4 F#4 G#4 C#5 D#5 E5 G#6 B6 C#7 F#8 G#8
-These notes are all diatonic, e.g. from the same key (unlike all the keys on a piano). That key is C# relative minor (or E major). In modal language, this is the C# Aeolian (or, when played from E to E, Ionian mode):
-C# D# E F# G# A B C#
-If you play notes restricted to a single key, it will come out sounding OK.
-reply
-￼
-
-yesenadam 1 hour ago [–]
-> this is the C# Aeolian
-Or it could equally well be
-G# A# B C# D# E F# G#
-(I hear it much more like that too.)
-reply
-￼
-
-flak48 3 hours ago [–]
-Same as playing only the white keys right? (C major/ A minor)
-reply
-￼
-
-yesenadam 1 hour ago [–]
-Yeah, except with no F.
-reply
-
- -->
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -78,6 +33,20 @@ reply
             justify-content: center;
             align-items: center;
             padding: 4px
+        }
+
+        textarea {
+            display: none;
+            word-wrap: anywhere;
+            min-width: 35em;
+            min-height: 10em;
+            margin: auto;
+            font-size: 8px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #ccc;
+            padding: 2px;
+            border-radius: 2px;
         }
 
         input {
@@ -164,13 +133,13 @@ reply
 
     <setting>
         <label class="left">Volume</label>
-        <input id="vol1" class="slider" type="range" min="-10" max="10" value="0" step="0.5" onchange="OnVolumeSliderChange(this)">
-        <label for="vol1" class="right">0 dB</label>
+        <input id="volumeSlider" class="slider" type="range" min="-10" max="10" value="0" step="0.5" onchange="OnVolumeSliderChange(this)">
+        <label for="volumeSlider" class="right">0 dB</label>
     </setting>
     <setting>
         <label class="left">Speed</label>
-        <input id="speed1" type="range" min="1" max="60" value="10" step="1" onchange="OnSpeedSliderChange(this)">
-        <label for="speed1" class="right">10</label>
+        <input id="speedSlider" type="range" min="1" max="60" value="10" step="1" onchange="OnSpeedSliderChange(this)">
+        <label for="speedSlider" class="right">10</label>
     </setting>
     <setting>
         <i class="fa fa-step-backward" onclick="SingleStepBack()"></i>
@@ -180,7 +149,10 @@ reply
         <span style="border-right: 2px solid #ccc; height: 25px; border-radius: 2px;"></span>
         <i class="fa fa-plus" onclick="AddGridTune()"></i>
         <i class="fa fa-minus" onclick="RemoveGridTune()"></i>
+        <span style="border-right: 2px solid #ccc; height: 25px; border-radius: 2px;"></span>
+        <i class="fa fa-floppy-o" onclick="GetLink()"></i>
     </setting>
+    <textarea id="shareLink"></textarea>
 
     <div id="gridTuneContainer" style="display: flex; justify-content: center; flex-wrap: wrap;"></div>
 

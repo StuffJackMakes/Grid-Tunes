@@ -25,10 +25,14 @@ Each *blip* on the grid has a direction (up, down, left, right) that it moves to
 
 ## Limitations
 
-* You cannot currently export any music created
-* You cannot currently share music via a link
+* You cannot currently export any music as an audio file
 * Some loops created can be exceedingly long, and thus not seem like a loop while listening
-* Having too many sounds going off may result in poor quality sound of some machines
+* Having too many sounds going off may result in audio distortion
+
+
+## Did You Know?
+
+While Javascript stores all numbers a [64-bit doubles](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number), it apparently casts each number to a [32-bit float](https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference/Operators/Bitwise_Operators) for bitwise operations.
 
 
 ## Setup

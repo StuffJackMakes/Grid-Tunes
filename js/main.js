@@ -65,6 +65,11 @@ function AddGridTune() {
         newGridTune.RandomizeOscillatorType();
     }
 
+    // Set the volume, speed, and pause state
+    newGridTune.SetVolume(document.getElementById("volumeSlider").value);
+    newGridTune.SetSpeed(document.getElementById("speedSlider").value);
+    newGridTune.SetPaused(document.getElementById("playPauseButton").classList.contains("fa-play"));
+
     currentGridTuneObjects.push(newGridTune);
 }
 
@@ -75,9 +80,63 @@ function RemoveGridTune() {
     }
 }
 
+// Get a shareable link to the current configuration
+function GetLink() {
+    // Serialize global parameters
+    let serializedData = [];
+    serializedData.push(Number(document.getElementById("volumeSlider").value));
+    serializedData.push(Number(document.getElementById("speedSlider").value));
+
+    // Serialize each grid
+    serializedData.push([]);
+    for (let gridTune of currentGridTuneObjects) {
+        serializedData[2].push(gridTune.Serialize());
+    }
+
+    // Convert the serialized object to a base64 string so it can be put in a URL
+    let serializedString = btoa(JSON.stringify(serializedData));
+    let shareableLink = window.location + "?" + serializedString;
+
+    // Copy and display the shareable link
+    navigator.clipboard.writeText(shareableLink);
+    document.getElementById("shareLink").textContent = shareableLink;
+    document.getElementById("shareLink").style.display = "block";
+}
+
+// Load a shareable link
+function SetupFromSerializedString(serializedString) {
+    // Get the object from the string
+    let serializedData = JSON.parse(atob(serializedString));
+
+    // Set global properties according to the deserialized data
+    document.getElementById("volumeSlider").value = serializedData[0];
+    document.getElementById("volumeSlider").onchange();
+    document.getElementById("speedSlider").value = serializedData[1];
+    document.getElementById("speedSlider").onchange();
+
+    // Set each grid's parameters and blips according to the deserialized data
+    for (let grid of serializedData[2]) {
+        AddGridTune();
+        currentGridTuneObjects[currentGridTuneObjects.length - 1].Deserialize(grid);
+    }
+}
+
 // Set up the initial grid and step control
 window.onload = () => {
-    AddGridTune();
+    // Load the setup for a shareable link if one was used
+    if (window.location.search && window.location.search.indexOf("?") === 0) {
+        PlayPause();
+        try {
+            SetupFromSerializedString(window.location.search.substring(1));
+        } catch (err) {
+            console.error("Error loading serialized grids:", err);
+            PlayPause();
+            AddGridTune();
+        }
+    } else {
+        // If this is not a shareable link, load the default grid instead
+        AddGridTune();
+    }
 
     // Update the GridTune on every frame
     function step() {
