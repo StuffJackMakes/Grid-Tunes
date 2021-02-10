@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="128" src="./grid_tunes_logo.svg">
+  <img height="128" src="./public/grid_tunes_logo.svg">
 </p>
 
 # Grid Tunes
@@ -15,7 +15,7 @@ This repository contains a website that allows users to create musical loops by 
 
 ## Live Example
 
-A live example of this website is hosted at [https://stuffjackmakes.com/gmgn/](https://stuffjackmakes.com/gmgn/).
+A live example of this website is hosted at [https://stuffjackmakes.com/grid-tunes/](https://stuffjackmakes.com/grid-tunes/).
 
 
 ## How it Works
