@@ -19,18 +19,16 @@ function OnSpeedSliderChange(slider) {
 
 // Pauses or continues playing of all grids
 function PlayPause() {
-    if (document.getElementById("playPauseButton").classList.contains("fa-pause")) {
+    if (!currentGridTuneObjects[0].isPaused) {
         for (let gridTune of currentGridTuneObjects) {
             gridTune.SetPaused(true);
         }
-        document.getElementById("playPauseButton").classList.remove("fa-pause");
-        document.getElementById("playPauseButton").classList.add("fa-play");
+        document.getElementById("playPauseButton").setAttribute("d", "M3 22v-20l18 10-18 10z");
     } else {
         for (let gridTune of currentGridTuneObjects) {
             gridTune.SetPaused(false);
         }
-        document.getElementById("playPauseButton").classList.remove("fa-play");
-        document.getElementById("playPauseButton").classList.add("fa-pause");
+        document.getElementById("playPauseButton").setAttribute("d", "M11 22h-4v-20h4v20zm6-20h-4v20h4v-20z");
     }
 }
 
@@ -68,7 +66,7 @@ function AddGridTune() {
     // Set the volume, speed, and pause state
     newGridTune.SetVolume(document.getElementById("volumeSlider").value);
     newGridTune.SetSpeed(document.getElementById("speedSlider").value);
-    newGridTune.SetPaused(document.getElementById("playPauseButton").classList.contains("fa-play"));
+    if (currentGridTuneObjects.length > 0) newGridTune.SetPaused(currentGridTuneObjects[0].isPaused);
 
     currentGridTuneObjects.push(newGridTune);
 }

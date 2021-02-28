@@ -15,7 +15,7 @@ This repository contains a website that allows users to create musical loops by 
 
 ## Live Example
 
-A live example of this website is hosted at [https://stuffjackmakes.com/grid-tunes/](https://stuffjackmakes.com/grid-tunes/).
+A live example of this website is hosted at [grid-tunes.stuffjackmakes.com](https://grid-tunes.stuffjackmakes.com).
 
 
 ## How it Works
