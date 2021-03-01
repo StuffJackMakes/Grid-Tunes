@@ -29,11 +29,7 @@ class GridTune {
         this.ClearGrid();
 
         // Create the synthesizer
-        this.synth = new Tone.PolySynth(4, Tone.Synth, {
-            oscillator : {
-                type : "triangle"
-            }
-        }).toMaster();
+        this.synth = new Tone.PolySynth().toDestination();
 
         // Allow placement, rotation, or removal of blips when clicking
         this.canvas.addEventListener("click", (event) => {
@@ -109,12 +105,12 @@ class GridTune {
 
     // Sets the volume this synthesizer plays at
     SetVolume(value) {
-        this.synth.output.volume.value = value;
+        this.synth.set({ volume: value });
     }
 
     // Sets the detune of this synthesizer
     SetDetune(value, dontUpdateUI) {
-        this.synth.detune.value = value;
+        this.synth.set({ detune: value });
         this.detuneSlider.value = value;
         if (!dontUpdateUI) {
             this.detuneSlider.onchange();
@@ -123,14 +119,10 @@ class GridTune {
 
     // Sets the oscaillator type of the synthesizer
     SetOscillatorType(oscillatorType, dontUpdateUI) {
-        let volume = this.synth.output.volume.value;
-        let detune = this.synth.detune.value;
+        let volume = this.synth.get().volume;
+        let detune = this.synth.get().detune;
 
-        this.synth = new Tone.PolySynth(4, Tone.Synth, {
-            oscillator : {
-                type : oscillatorType
-            }
-        }).toMaster();
+        this.synth.set({ oscillator: { type: oscillatorType }});
 
         if (!dontUpdateUI) {
             this.oscillatorSelect.value = oscillatorType;

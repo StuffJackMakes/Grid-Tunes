@@ -1,6 +1,13 @@
 // Keep track of all grids
 let currentGridTuneObjects = [];
 
+// Starts Tone.js and hide the button that triggered it
+// Required on some browsers to enable sound
+function EnableSound() {
+    Tone.start();
+    document.getElementById("enableToneButton").style.display = "none";
+}
+
 // Changes the volume of all grids
 function OnVolumeSliderChange(slider) {
     for (let gridTune of currentGridTuneObjects) {

@@ -39,6 +39,10 @@ While Javascript stores all numbers a [64-bit doubles](https://developer.mozilla
 
 Host the `index.html` file with your software of choice and you're done!
 
+## Inspiration
+
+- https://github.com/irshadshalu/music-grid
+- https://www.tones.fm/tones/calm
 
 ## Author
 
